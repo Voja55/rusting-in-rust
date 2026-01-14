@@ -5,7 +5,7 @@
 Ovaj projekat je CA simulacija širenja rdje u 2D matrici kroz iteraciju vremena i odredjenih pravila poput vlage prostora i količine kiseonika.
 Vlaga i kiseonik su vrsta pravila po kojoj se vrši širenje. Kao na primer verovatnoća prenosa korozije kao i njegov vremenski period.
 
-Primer: svaka mala ćelija može biti "čist metal", "površinska rđa" ili "jaka rđa". Svaka ćelija gleda svoje komšije i menja se po pravilima.
+Primer: svaka mala ćelija može biti "čist metal", "površinska rđa", "jaka rđa" ili "truo metal". Svaka ćelija gleda svoje komšije i menja se po pravilima.
 
 ## Metode i plan
 
@@ -16,7 +16,7 @@ Funkcionalnosti:
    - Jednostavna petlja koja ide kroz sve ćelije i menja ih po pravilima.
 
 2. **Paralelna verzija u Rust-u** (sa threadovima)  
-   - Koristiću jednostavnu biblioteku (rayon) da se više delova matrice računa u isto vreme.  
+   - Koristiću biblioteku (rayon) da se više delova matrice računa u isto vreme.  
 
 3. **Sekvencijalna i paralelna verzija u Python-u** (za poređenje)  
    - Koristiću NumPy za mrežu i multiprocessing za paralelno.
