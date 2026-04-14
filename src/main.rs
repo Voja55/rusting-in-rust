@@ -11,7 +11,8 @@ use grid::Grid;
 fn main() {
     println!("Rustin in rust starting...");
 
-    let grid = Grid::new_random(20, 10);
+    let mut grid = Grid::new_random(40, 20);
 
-    grid.display();
+    //par_sim::run(&mut grid, 50, 100);
+    seq_sim::run(&mut grid, 50, 100, "output/run_01");
 }
