@@ -3,6 +3,7 @@ mod rules;
 mod output;
 mod par_sim;
 mod seq_sim;
+mod benchmark;
 
 use grid::Grid;
 use clap::Parser;
@@ -33,11 +34,42 @@ struct Args {
     oxygen: f32,
 
     #[arg(short, long)]
-    random: bool 
+    random: bool,
+
+    #[arg(short, long)]
+    parallel: bool,
+
+    #[arg(short, long)]
+    benchmark: bool,
+
+    #[arg(long, default_value_t=10)]
+    bench_runs: usize
 }
 
 fn main() {
     let args = Args::parse();
+
+    if args.benchmark {
+        println!("Rustin in rust benchmark starting...");
+        
+        let sizes = vec![
+            (50,  25),
+            (100, 50),
+            (200, 100),
+            (400, 200),
+            (600, 300),
+        ];
+
+        benchmark::run_benchmark(
+            &sizes,
+            args.steps,
+            args.bench_runs,
+            "output/benchmark/results.csv",
+        );
+        return;
+    }
+
+    let mode = if args.parallel { "parallel" } else { "sequential" };
 
     println!("Rustin in rust starting...");
     println!("Grid: {}x{}  Steps: {}  Output: {}\n",
@@ -49,6 +81,9 @@ fn main() {
         Grid::new_with_params(args.width, args.height, args.humidity, args.oxygen)
     };
 
-    //par_sim::run(&mut grid, 50, 100);
-    seq_sim::run(&mut grid, args.steps, args.delay, &args.output);
+    if args.parallel {
+        par_sim::run(&mut grid, args.steps, args.delay, &args.output);
+    } else {
+        seq_sim::run(&mut grid, args.steps, args.delay, &args.output);
+    }
 }

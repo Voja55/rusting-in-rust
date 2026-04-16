@@ -34,6 +34,12 @@ pub fn run(grid: &mut Grid, steps: usize, delay_ms: u64, output_dir: &str) {
     grid.display();
 }
 
+pub fn step_n(grid: &mut Grid, steps: usize) {
+    for _ in 0..steps {
+        step(grid);
+    }
+}
+
 fn clear_terminal() {
     print!("\x1B[2J\x1B[1;1H");
 }
