@@ -27,6 +27,11 @@ pub fn run(grid: &mut Grid, steps: usize, delay_ms: u64, output_dir: &str) {
 
     output::save_step(grid, steps, output_dir);
     output::save_summary(steps, grid.width, grid.height, output_dir);
+
+    clear_terminal();
+    println!("Step {}/{} — simulation complete\n", steps, steps);
+    println!("Output saved to: {}\n", output_dir);
+    grid.display();
 }
 
 fn clear_terminal() {

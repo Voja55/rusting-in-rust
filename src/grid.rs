@@ -1,3 +1,4 @@
+use core::f32;
 use std::{arch::x86_64, cell::Cell};
 
 use rand::{Rng, random, rngs};
@@ -16,9 +17,9 @@ impl CellState {
     pub fn to_char(&self) -> char {
         match self {
             CellState::Clean => 'O',
-            CellState::SurfaceRust => '@',
-            CellState::HeavyRust => '#',
-            CellState::Rotten => 'X'
+            CellState::SurfaceRust => '1',
+            CellState::HeavyRust => '2',
+            CellState::Rotten => '3'
         }
     }
 }
@@ -83,6 +84,23 @@ impl Grid {
         }
 
         neighbors
+    }
+
+    pub fn new_with_params(width: usize, height: usize, humidity: f32, oxygen: f32) -> Self {
+        let mut rng = rand::thread_rng();
+        let mut grid = Grid::new(width, height);
+
+        for y in 0..height {
+            for x in 0..width {
+                grid.humidity[y][x] = humidity;
+                grid.oxygen[y][x] = oxygen;
+
+                if rng.gen_range(0.0..1.0) < 0.1 {
+                    grid.rust[y][x] = grid::CellState::SurfaceRust;
+                }
+            }
+        }
+        grid
     }
 
 }
