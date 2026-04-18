@@ -1,8 +1,7 @@
-use std::fs::{self, create_dir_all};
-use std::path::{self, Path};
+use std::fs;
+use std::path::Path;
 use serde_json::json;
-use crate::grid::{self, CellState, Grid};
-use crate::output;
+use crate::grid::{CellState, Grid};
 
 impl CellState {
     pub fn to_str(&self) -> &str {

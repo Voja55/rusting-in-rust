@@ -4,6 +4,7 @@ mod output;
 mod par_sim;
 mod seq_sim;
 mod benchmark;
+mod scaling;
 
 use grid::Grid;
 use clap::Parser;
@@ -43,11 +44,42 @@ struct Args {
     benchmark: bool,
 
     #[arg(long, default_value_t=10)]
-    bench_runs: usize
+    bench_runs: usize,
+
+    #[arg(long)]
+    scaling: bool,
+
+    #[arg(long, default_value_t = 8)]
+    max_threads: usize,
+
+    #[arg(long, default_value_t = 10)]
+    scaling_runs: usize,
 }
 
 fn main() {
     let args = Args::parse();
+
+    if args.scaling {
+        println!("Rusting in Rust — Scaling experiments\n");
+
+        scaling::run_strong_scaling(
+            400, 200,       // fixed grid size
+            args.steps,
+            args.max_threads,
+            args.scaling_runs,
+            "output/scaling/strong_scaling_rust.csv",
+        );
+
+        scaling::run_weak_scaling(
+            100, 50,        // base grid size per thread
+            args.steps,
+            args.max_threads,
+            args.scaling_runs,
+            "output/scaling/weak_scaling_rust.csv",
+        );
+
+        return;
+    }
 
     if args.benchmark {
         println!("Rustin in rust benchmark starting...");
@@ -69,7 +101,7 @@ fn main() {
         return;
     }
 
-    let mode = if args.parallel { "parallel" } else { "sequential" };
+    let _mode = if args.parallel { "parallel" } else { "sequential" };
 
     println!("Rustin in rust starting...");
     println!("Grid: {}x{}  Steps: {}  Output: {}\n",

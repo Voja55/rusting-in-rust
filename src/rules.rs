@@ -1,6 +1,4 @@
-use std::cell::Cell;
-
-use crate::grid::{self, CellState, Grid};
+use crate::grid::{CellState, Grid};
 use rand::Rng;
 
 pub fn next_cell_state(grid: &Grid, x:usize, y:usize) -> CellState {
