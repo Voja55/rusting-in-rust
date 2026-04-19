@@ -5,6 +5,7 @@ import seq_sim
 import par_sim
 import benchmark
 import scaling
+import atexit
 
 def parse_args():
     parser = argparse.ArgumentParser(
@@ -29,6 +30,8 @@ def parse_args():
 
 def main():
     args = parse_args()
+
+    atexit.register(par_sim.shutdown)
 
     if args.scaling:
         print('Python scaling experiments\n')

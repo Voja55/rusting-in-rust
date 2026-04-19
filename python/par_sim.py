@@ -3,6 +3,14 @@ import numpy as np
 import multiprocessing as mp
 import grid
 
+_pool = None
+
+def get_pool(n_workers):
+    global _pool
+    if _pool is None:
+        _pool = mp.Pool(processes=n_workers)
+    return _pool
+
 def _process_chunk(args):
     row_start, row_end, rust_chunk, hum_chunk, oxy_chunk = args
     from rules import compute_next_state
@@ -23,8 +31,10 @@ def step_parallel(rust, hum, oxy, n_workers):
             oxy[row_start:row_end].copy(),
         ))
 
-    with mp.Pool(processes=n_workers) as pool:
-        results = pool.map(_process_chunk, chunks)
+    pool = get_pool(n_workers)
+    results = pool.map(_process_chunk, chunks)
+    # with mp.Pool(processes=n_workers) as pool:
+    #     results = pool.map(_process_chunk, chunks)
 
     return np.vstack(results)
 
@@ -57,9 +67,15 @@ def run(rust, hum, oxy, steps, n_workers=None, delay_s=0.1, output_dir='output/p
     return rust
 
 def step_n(rust, hum, oxy, steps, n_workers=None):
-    """Silent version for benchmarking."""
     if n_workers is None:
         n_workers = mp.cpu_count()
     for _ in range(steps):
         rust = step_parallel(rust, hum, oxy, n_workers)
     return rust
+
+def shutdown():
+    global _pool
+    if _pool is not None:
+        _pool.close()
+        _pool.join()
+        _pool = None
