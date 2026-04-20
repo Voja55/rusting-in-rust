@@ -5,6 +5,7 @@ mod par_sim;
 mod seq_sim;
 mod benchmark;
 mod scaling;
+mod visualizer;
 
 use grid::Grid;
 use clap::Parser;
@@ -54,10 +55,18 @@ struct Args {
 
     #[arg(long, default_value_t = 10)]
     scaling_runs: usize,
-}
 
-fn main() {
+    #[arg(short, long)]
+    gui: bool
+}
+#[macroquad::main("Rusting in Rust")]
+async fn main() {
     let args = Args::parse();
+
+    if args.gui {
+        visualizer::run_gui(args.width, args.height, args.humidity, args.oxygen).await;
+        return;
+    }
 
     if args.scaling {
         println!("Rusting in Rust — Scaling experiments\n");
